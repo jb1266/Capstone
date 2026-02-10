@@ -1,49 +1,19 @@
-name: Node.js with MySQL CI
+version: 0.2
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+phases:
+  install:
+    runtime-versions:
+      nodejs: 20
+    commands:
+      - echo "Installing dependencies..."
+      - npm install
 
-jobs:
   build:
-    # We use Ubuntu because it is the fastest/most stable for build servers
-    runs-on: ubuntu-latest
+    commands:
+      - echo "Checking files..."
+      - # You could run 'npm test' here if you had tests set up
 
-    services:
-      # This "installs" and starts the MySQL tool automatically
-      mysql:
-        image: mysql:8.0
-        env:
-          MYSQL_ROOT_PASSWORD: password123
-          MYSQL_DATABASE: producev1
-        ports:
-          - 3306:3306
-        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Use Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x' # Installs the LTS version we used
-        cache: 'npm'
-
-    - name: Install dependencies
-      run: npm install
-
-    # - name: Initialize Database Schema
-    #   run: |
-    #     # This step runs your SQL scripts to create tables and procedures
-    #     # Assuming you save your SQL code in a file named 'schema.sql'
-    #     mysql -h 127.0.0.1 -u root -pyour_password produce_shop < schema.sql
-
-    - name: Run Build/Test
-      run: |
-        # This checks if the app can at least start without crashing
-        node app.js & 
-        sleep 5
-        curl http://localhost:3000
+artifacts:
+  files:
+    - '**/*' # This is CRITICAL. It grabs app.js, public/, package.json, and appspec.yml
+  name: BuildArtifact
