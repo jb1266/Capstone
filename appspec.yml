@@ -16,38 +16,27 @@
 
 
 
-version: 0.1
+# version: 0.1
+# files:
+#   - source: /
+#     destination: /home/ubuntu/CapstoneProject
+#     permissions:
+#       - object: /home/ubuntu/CapstoneProject
+#         pattern: "**"
+#         owner: ubuntu
+#         group: ubuntu
+#         mode: 755
+#       - object: /home/ubuntu/CapstoneProject/scripts
+#         pattern: "*.sh"
+#         mode: 755
+
+  
+version: 0.0
+os: linux
 files:
   - source: /
     destination: /home/ubuntu/CapstoneProject
-    permissions:
-      - object: /home/ubuntu/CapstoneProject
-        pattern: "**"
-        owner: ubuntu
-        group: ubuntu
-        mode: 755
-      - object: /home/ubuntu/CapstoneProject/scripts
-        pattern: "*.sh"
-        mode: 755
-# hooks:
-#   ApplicationStop:
-#     - location: scripts/stop_server.sh
-#       timeout: 300
-#       runas: ubuntu
-#   BeforeInstall:
-#     - location: scripts/install_dependencies.sh
-#       timeout: 300
-#       runas: ubuntu
-#   ValidateService:
-#     - location: scripts/test_script.sh
-#       timeout: 300
-#       runas: ubuntu
-#   AfterInstall:
-#     - location: scripts/start_server.sh
-#       timeout: 300
-#       runas: ubuntu
-
-scripts:
+hooks:
   BeforeDeploy:
     - location: scripts/stop_server.sh
       timeout: 300
@@ -59,4 +48,9 @@ scripts:
     - location: scripts/start_server.sh
       timeout: 300
       runas: ubuntu
-  
+permissions:
+  - object: /home/ubuntu/CapstoneProject
+    pattern: "**"
+    owner: ubuntu
+    group: ubuntu
+    mode: 755
