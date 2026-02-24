@@ -70,7 +70,7 @@ if ! command -v caddy &> /dev/null; then
 
     # Add GPG key (Checks if exists first to avoid overwrite errors)
     if [ ! -f /usr/share/keyrings/caddy-stable-archive-keyring.gpg ]; then
-        curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+        curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor --yes -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
     fi
     sudo chmod o+r /usr/share/keyrings/caddy-stable-archive-keyring.gpg
 
