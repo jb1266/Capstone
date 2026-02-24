@@ -57,17 +57,28 @@ else
 fi
 
 
-# 1. Add the keyring
-curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-sudo chmod o+r /usr/share/keyrings/caddy-stable-archive-keyring.gpg
 
-# 2. Add the repository list
-echo "deb [signed-by=/usr/share/keyrings/caddy-stable-archive-keyring.gpg] https://dl.cloudsmith.io/public/caddy/stable/debian any main" | sudo tee /etc/apt/sources.list.d/caddy-stable.list
-sudo chmod o+r /etc/apt/sources.list.d/caddy-stable.list
 
-# 3. Update and install
-sudo apt update
-sudo apt install caddy
+if ! command -v caddy &> /dev/null; then
+    echo "Installing Caddy Server..."
+    
+    # 1. Install required dependencies for adding the repo
+    sudo apt-get install -y debian-keyring debian-archive-keyring apt-transport-https
+    
+    # 2. Add Caddy's official GPG key and repository
+    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+    sudo chmod o+r /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+
+    # Add repository list
+    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+    sudo chmod o+r /etc/apt/sources.list.d/caddy-stable.list
+    
+    # 3. Update and Install
+    sudo apt-get update
+    sudo apt-get install -y caddy
+    
+    echo "Caddy installed successfully."
+fi
 
 
 echo "Writing custom Caddyfile configuration..."
