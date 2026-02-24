@@ -1,28 +1,5 @@
 #!/bin/bash
 
-# # 1. Update the system package list
-# sudo apt-get update -y
-
-# # 2. Install MySQL Server
-# # 'export DEBIAN_FRONTEND=noninteractive' prevents MySQL from asking for 
-# # a password during installation so the build doesn't hang.
-# export DEBIAN_FRONTEND=noninteractive
-# sudo apt-get install -y mysql-server
-
-# # 3. Install Node.js (Version 20.x)
-# curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-# sudo apt-get install -y nodejs
-
-# # 4. Verify installations (visible in AWS CodeDeploy logs)
-# node -v
-# npm -v
-# mysql --version
-
-# # 5. Start and enable MySQL service
-# sudo systemctl start mysql
-# sudo systemctl enable mysql
-
-
 
 # Create directory if it doesn't exist
 sudo mkdir -p /home/ubuntu/CapstoneProject
@@ -58,28 +35,16 @@ fi
 
 
 
-# Ensure script stops on first error
+# Insatll Caddy
 
 if ! command -v caddy &> /dev/null; then
-    echo "Installing Caddy Server..."
-    
-    sudo apt-get update
-    sudo apt-get install -y debian-keyring debian-archive-keyring apt-transport-https curl
-
-    # Add GPG key (Checks if exists first to avoid overwrite errors)
-    if [ ! -f /usr/share/keyrings/caddy-stable-archive-keyring.gpg ]; then
-        curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor --yes -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-    fi
-    sudo chmod o+r /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-
-    # Add repository list
+    sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https curl
+    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
     curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
-    sudo chmod o+r /etc/apt/sources.list.d/caddy-stable.list
-    
-    sudo apt-get update
-    sudo apt-get install -y caddy
-    
-    echo "Caddy installed successfully."
+    chmod o+r /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+    chmod o+r /etc/apt/sources.list.d/caddy-stable.list
+    sudo apt update
+    sudo apt install caddy
 fi
 
 echo "Writing custom Caddyfile configuration..."
