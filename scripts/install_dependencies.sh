@@ -57,10 +57,8 @@ else
 fi
 
 
-#!/bin/bash
 
 # Ensure script stops on first error
-set -e
 
 if ! command -v caddy &> /dev/null; then
     echo "Installing Caddy Server..."
