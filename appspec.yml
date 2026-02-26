@@ -36,18 +36,6 @@ os: linux
 files:
   - source: /
     destination: /home/ubuntu/CapstoneProject
-hooks:
-  BeforeDeploy:
-    - location: scripts/stop_server.sh
-      timeout: 300
-      runas: ubuntu
-    - location: scripts/install_dependencies.sh
-      timeout: 300
-      runas: ubuntu
-  AfterDeploy:
-    - location: scripts/start_server.sh
-      timeout: 300
-      runas: ubuntu
 permissions:
   - object: /home/ubuntu/CapstoneProject
     pattern: "**"
@@ -59,3 +47,15 @@ permissions:
     owner: ubuntu
     group: ubuntu
     mode: 755 #
+hooks:
+  BeforeDeploy:
+    - location: scripts/stop_server.sh
+      timeout: 600
+      runas: root
+    - location: scripts/install_dependencies.sh
+      timeout: 600
+      runas: root
+  AfterDeploy:
+    - location: scripts/start_server.sh
+      timeout: 600
+      runas: root

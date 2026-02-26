@@ -1,12 +1,7 @@
 #!/bin/bash
 
-
-# Create directory if it doesn't exist
-sudo mkdir -p /home/ubuntu/CapstoneProject
-sudo chown ubuntu:ubuntu /home/ubuntu/CapstoneProject
-
-# Navigate to project directory
-cd /home/ubuntu/CapstoneProject
+# Update package list and upgrade
+sudo apt update && sudo apt upgrade -y
 
 # Install Node.js and npm if not present
 if ! command -v node &> /dev/null; then
@@ -15,64 +10,38 @@ if ! command -v node &> /dev/null; then
     sudo apt-get install -y nodejs
 fi
 
-# Install MySQL if needed
-if ! command -v mysql &> /dev/null; then
-    echo "Installing MySQL..."
-    sudo apt-get update
-    sudo apt-get install -y mysql-server
-    sudo systemctl start mysql
-    sudo systemctl enable mysql
-fi
+# Create directory if it doesn't exist
+sudo mkdir -p /home/ubuntu/CapstoneProject
+sudo chown ubuntu:ubuntu /home/ubuntu/CapstoneProject
+
+# Navigate to project directory
+cd /home/ubuntu/CapstoneProject
 
 # Install npm dependencies if package.json exists
-if [ -f "package.json" ]; then
+if [ -f "/home/ubuntu/CapstoneProject/package.json" ]; then
     echo "Installing npm dependencies..."
+    npm install mysql2
     npm install --production
 else
     echo "No package.json found in $(pwd)"
     ls -la
 fi
 
-
-
-# Insatll Caddy
-
-if ! command -v caddy &> /dev/null; then
-    sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https curl
-    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
-    chmod o+r /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-    chmod o+r /etc/apt/sources.list.d/caddy-stable.list
-    sudo apt update
-    sudo apt install caddy
-    sudo systemctl start caddy
-    sudo systemctl enable caddy
-fi
-
-echo "Writing custom Caddyfile configuration..."
-
 # Ensure the directory exists (just in case)
 sudo mkdir -p /etc/caddy
 
-# Write the config
-sudo bash -c 'cat <<EOF > /etc/caddy/Caddyfile
-:80 {
-    reverse_proxy localhost:3000
-    encode gzip
-}
-EOF'
+# Install Caddy
+sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https curl
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | sudo gpg --dearmor -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' | sudo tee /etc/apt/sources.list.d/caddy-stable.list
+chmod o+r /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+chmod o+r /etc/apt/sources.list.d/caddy-stable.list
+sudo apt update
+sudo apt install -y caddy
+sudo systemctl start caddy
+sudo systemctl enable caddy
 
-# Validate and Restart/Reload
-# We use 'restart' here for the initial setup to ensure a clean state
-if sudo caddy validate --config /etc/caddy/Caddyfile; then
-    echo "Caddyfile validated. Applying configuration..."
-    sudo systemctl restart caddy
-else
-    echo "Caddyfile validation failed!"
-    exit 1
-fi
 
-echo "Setup complete! Caddy is now proxying :80 to :3000."
 
 
 
