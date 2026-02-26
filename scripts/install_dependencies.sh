@@ -45,6 +45,8 @@ if ! command -v caddy &> /dev/null; then
     chmod o+r /etc/apt/sources.list.d/caddy-stable.list
     sudo apt update
     sudo apt install caddy
+    sudo systemctl start caddy
+    sudo systemctl enable caddy
 fi
 
 echo "Writing custom Caddyfile configuration..."

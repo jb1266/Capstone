@@ -41,7 +41,7 @@ pm2 delete "CapstoneProject" || true
 pm2 start app.js --name "CapstoneProject" --update-env
 
 # To get private ip address
-echo "<h1>$(hostname -f)</h1>" > ../public/index.html
+echo "<h1>$(hostname -f)</h1>" >> ../public/index.html
 
 # 5. Save state
 pm2 save
