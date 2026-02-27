@@ -2,33 +2,43 @@
 
 # Update package list and upgrade
 sudo apt update && sudo apt upgrade -y
+echo "update and upgrade passed " $DATE >> /home/abc.log
+# chmod +x scripts/*.sh
+
 
 # Install Node.js and npm if not present
 if ! command -v node &> /dev/null; then
     echo "Installing Node.js..."
-    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-    sudo apt-get install -y nodejs
+    sudo apt install -y nodejs npm
+    echo "node and npm installed " $DATE >> /home/abc.log
 fi
 
 # Create directory if it doesn't exist
 sudo mkdir -p /home/ubuntu/CapstoneProject
 sudo chown ubuntu:ubuntu /home/ubuntu/CapstoneProject
+echo "CapstoneProject directory created " $DATE >> /home/abc.log
 
 # Navigate to project directory
 cd /home/ubuntu/CapstoneProject
+echo "CapstoneProject directory selected " $DATE >> /home/abc.log
+
 
 # Install npm dependencies if package.json exists
 if [ -f "/home/ubuntu/CapstoneProject/package.json" ]; then
     echo "Installing npm dependencies..."
     npm install mysql2
     npm install --production
+    echo "npm dependencies installed " $DATE >> /home/abc.log
+
 else
-    echo "No package.json found in $(pwd)"
+    echo "No package.json found in $(pwd) " $DATE >> /home/abc.log
     ls -la
 fi
 
 # Ensure the directory exists (just in case)
 sudo mkdir -p /etc/caddy
+echo "Caddy directory created " $DATE >> /home/abc.log
+
 
 # Install Caddy
 sudo apt install -y debian-keyring debian-archive-keyring apt-transport-https curl
@@ -40,6 +50,8 @@ sudo apt update
 sudo apt install -y caddy
 sudo systemctl start caddy
 sudo systemctl enable caddy
+echo "Caddy installed and running " $DATE >> /home/abc.log
+
 
 
 
