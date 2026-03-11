@@ -1,10 +1,9 @@
-# #!/bin/bash
+#!/bin/bash
 
 
 
 # 1. Set the working directory
 cd /home/ubuntu/CapstoneProject
-echo "CapstoneProject directory selected " $DATE >> /home/abd.log
 
 
 # 2. FORCE environment variables (This fixes the PM2 /etc/.pm2 error)
@@ -22,8 +21,6 @@ pm2 delete "CapstoneProject" || true
 pm2 start app.js --name "CapstoneProject" --update-env
 
 echo "Writing custom Caddyfile configuration..."
-
-node app.js
 
 # Write the config
 sudo bash -c 'cat <<EOF > /etc/caddy/Caddyfile
