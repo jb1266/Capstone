@@ -1,18 +1,7 @@
-version: 0.1
+version: 0.0
 files:
   - source: /
     destination: /home/ubuntu/CapstoneProject
-permissions:
-  - object: /home/ubuntu/CapstoneProject
-    pattern: "**"
-    owner: ubuntu
-    group: ubuntu
-    mode: 755
-  - object: /home/ubuntu/CapstoneProject/scripts
-    pattern: "*.sh"
-    owner: ubuntu
-    group: ubuntu
-    mode: 755
 hooks:
   BeforeInstall:
     - location: scripts/stop_server.sh
@@ -30,4 +19,3 @@ hooks:
     - location: scripts/validate_service.sh
       timeout: 180
       runas: root
-
