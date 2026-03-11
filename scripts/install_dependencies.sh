@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# The following bash script is to create a custom AMI 
+# The following bash script is to create a custom AMI
 
 # Update package list and upgrade
 sudo apt update && sudo apt upgrade -y
@@ -17,7 +17,11 @@ fi
 
 # Create directory if it doesn't exist
 sudo mkdir -p /home/ubuntu/CapstoneProject
-sudo chown ubuntu:ubuntu /home/ubuntu/CapstoneProject
+
+# Set proper ownership and permissions
+chown -R ubuntu:ubuntu /home/ubuntu/CapstoneProject
+chmod -R 755 /home/ubuntu/CapstoneProject
+chmod +x scripts/*.sh
 
 # Navigate to project directory
 cd /home/ubuntu/CapstoneProject
