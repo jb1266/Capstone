@@ -5,9 +5,25 @@
 # Update package list and upgrade
 sudo apt update && sudo apt upgrade -y
 
+# Install unzip if not present
+if ! command -v unzip &> /dev/null; then
+    echo "Installing unzip..."
+    sudo apt install unzip -y
+fi
+
+# Install AWS CLI if not present
+if ! command -v aws &> /dev/null; then
+    echo "AWS CLI not found, installing..."
+    curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "/tmp/awscliv2.zip"
+    unzip /tmp/awscliv2.zip -d /tmp
+    sudo /tmp/aws/install
+    echo "AWS CLI installed: $(aws --version)"
+else
+    echo "AWS CLI already installed: $(aws --version)"
+fi
+
 # Installed SSM Agent
 sudo snap install amazon-ssm-agent --classic
-
 
 # Install Node.js and npm if not present
 if ! command -v node &> /dev/null; then
@@ -26,27 +42,23 @@ chmod +x scripts/*.sh
 # Navigate to project directory
 cd /home/ubuntu/CapstoneProject
 
-
 # Install npm dependencies if package.json exists
 if [ -f "/home/ubuntu/CapstoneProject/package.json" ]; then
     echo "Installing npm dependencies..."
     npm install mysql2
     npm install --production
-
 else
     ls -la
 fi
 
-# 4. Install PM2 if not present
+# Install PM2 if not present
 if ! command -v pm2 &> /dev/null; then
     echo "Installing PM2..."
     sudo npm install -g pm2
 fi
 
-
 # Ensure the directory exists (just in case)
 sudo mkdir -p /etc/caddy
-
 
 # Install Caddy
 if ! command -v caddy &> /dev/null; then
@@ -60,6 +72,3 @@ if ! command -v caddy &> /dev/null; then
     sudo systemctl start caddy
     sudo systemctl enable caddy
 fi
-
-
-
